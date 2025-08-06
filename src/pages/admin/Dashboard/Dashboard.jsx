@@ -2,6 +2,7 @@ import React from 'react'
 import { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill} from 'react-icons/bs'
 import Breadcrumb from '../../../components/admin/Breadcrumb/Breadcrumb.jsx'
 import './Dashboard.css'
+import Table from '../../../components/admin/Table/Table.jsx'
 const Dashboard = () =>{
 
     const data = [
@@ -58,28 +59,28 @@ const Dashboard = () =>{
         <Breadcrumb items={breadcrumbItems} />
 
         <div className='main-cards'>
-            <div className='card'>
+            <div className='card bg-blue-300'>
                 <div className='card-inner'>
                     <h3>PRODUCTS</h3>
                     <BsFillArchiveFill className='card_icon'/>
                 </div>
                 <h1>300</h1>
             </div>
-            <div className='card'>
+            <div className='card bg-amber-200'>
                 <div className='card-inner'>
                     <h3>CATEGORIES</h3>
                     <BsFillGrid3X3GapFill className='card_icon'/>
                 </div>
                 <h1>12</h1>
             </div>
-            <div className='card'>
+            <div className='card  bg-orange-200'>
                 <div className='card-inner'>
                     <h3>CUSTOMERS</h3>
                     <BsPeopleFill className='card_icon'/>
                 </div>
                 <h1>33</h1>
             </div>
-            <div className='card'>
+            <div className='card bg-green-200'>
                 <div className='card-inner'>
                     <h3>ALERTS</h3>
                     <BsFillBellFill className='card_icon'/>

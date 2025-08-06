@@ -1,47 +1,54 @@
 const  Table = () =>{
   // Sample data
-  const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User' },
+  const workers = [
+    { id: 1, name: 'Rajesh Kumar', occupation: 'Plumber', experience: '5 years', rating: '4.8', location: 'Mumbai' },
+    { id: 2, name: 'Sunita Patel', occupation: 'Electrician', experience: '3 years', rating: '4.5', location: 'Delhi' },
+    { id: 3, name: 'Vijay Singh', occupation: 'Carpenter', experience: '7 years', rating: '4.9', location: 'Bangalore' },
+    { id: 4, name: 'Priya Sharma', occupation: 'Cleaner', experience: '2 years', rating: '4.2', location: 'Hyderabad' },
   ];
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">User Management</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+    <div className="overflow-x-auto p-4">
+      <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-md">
+        <thead className="bg-gray-800 text-white">
+          <tr>
+            <th className="py-3 px-4 text-left">ID</th>
+            <th className="py-3 px-4 text-left">Name</th>
+            <th className="py-3 px-4 text-left">Occupation</th>
+            <th className="py-3 px-4 text-left">Experience</th>
+            <th className="py-3 px-4 text-left">Rating</th>
+            <th className="py-3 px-4 text-left">Location</th>
+            <th className="py-3 px-4 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-700">
+          {workers.map((worker) => (
+            <tr key={worker.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+              <td className="py-3 px-4">{worker.id}</td>
+              <td className="py-3 px-4 font-medium">{worker.name}</td>
+              <td className="py-3 px-4">
+                <span className="bg-blue-100 text-blue-800 py-1 px-2 rounded-full text-xs">
+                  {worker.occupation}
+                </span>
+              </td>
+              <td className="py-3 px-4">{worker.experience}</td>
+              <td className="py-3 px-4">
+                <div className="flex items-center">
+                  <span className="text-yellow-500 mr-1">★</span>
+                  {worker.rating}
+                </div>
+              </td>
+              <td className="py-3 px-4">{worker.location}</td>
+              <td className="py-3 px-4">
+                <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-sm transition-colors">
+                  Hire
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${user.role === 'Admin' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                    {user.role}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                  <button className="text-red-600 hover:text-red-900">Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 export default Table;
