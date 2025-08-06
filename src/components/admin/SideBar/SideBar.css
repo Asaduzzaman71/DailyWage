@@ -1,0 +1,148 @@
+/* SideBar.css */
+
+/* Main sidebar container */
+#sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #2a3f54;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease;
+  z-index: 999;
+  overflow-y: auto;
+}
+
+/* Sidebar title section */
+.sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #1a2a3a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brand/logo section */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Cart icon in header */
+.icon_header {
+  font-size: 1.5rem;
+  color: #19b5fe;
+}
+
+/* Close button (X icon) */
+.close_icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  display: none; /* Hidden by default on desktop */
+}
+
+.close_icon:hover {
+  color: #fe3419;
+  transform: scale(1.1);
+}
+
+/* Side menu list container*/
+.sidebar-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+/* Scrollbar styling */
+#sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+
+
+/* when sidebar is collapsed Partially hidden state - shows only icons */
+#sidebar.sidebar-responsive {
+  width: 60px; /* Only show icon column */
+  overflow: hidden;
+}
+
+/* Hide text and other elements when collapsed */
+#sidebar.sidebar-responsive .sidebar-title .sidebar-brand span{
+  display: none;
+}
+
+
+
+/* Make icons larger when collapsed */
+#sidebar.sidebar-responsive .icon {
+  font-size: 1.5rem;
+  margin-right: 0;
+}
+#sidebar.sidebar-responsive .menu-header .icon{
+  transform: scale(1.5);
+  margin-right: 0;
+}
+
+
+
+/* Animation for submenu */
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 300px;
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for max width =< 768*/
+@media (max-width: 768px) {
+  #sidebar {
+    left: -250px;
+    width: 250px;
+  }
+  
+  #sidebar.sidebar-responsive {
+    left: 0;
+    width: 250px;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
+  }
+  #sidebar.sidebar-responsive .sidebar-title .sidebar-brand span {
+    display: block;
+  }
+  .close_icon {
+    display: block;
+    color: #c3c973;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+  }
+  
+  /* Show text on mobile even when "collapsed" */
+  #sidebar.sidebar-responsive .sidebar-title {
+    display: flex;
+  }
+  
+  #sidebar.sidebar-responsive .icon {
+    font-size: 1.1rem;
+  }
+
+}

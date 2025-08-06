@@ -1,0 +1,266 @@
+/* SideBar.css */
+
+/* Main sidebar container */
+#sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #2a3f54;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease;
+  z-index: 999;
+  overflow-y: auto;
+}
+
+/* Sidebar title section */
+.sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #1a2a3a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brand/logo section */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Cart icon in header */
+.icon_header {
+  font-size: 1.5rem;
+  color: #19b5fe;
+}
+
+/* Close button (X icon) */
+.close_icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  display: none; /* Hidden by default on desktop */
+}
+
+.close_icon:hover {
+  color: #fe3419;
+  transform: scale(1.1);
+}
+
+/* Side menu list container*/
+.sidebar-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual menu items */
+.sidebar-list-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.sidebar-list-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Menu links */
+.sidebar-list-item a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #ecf0f1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-list-item a:hover {
+  color: #19b5fe;
+  padding-left: 25px;
+}
+
+/* Menu icons */
+.sidebar-list-item .icon {
+  font-size: 1.1rem;
+  min-width: 20px;
+  color: #c3c973;
+  margin-bottom: 5px;
+}
+
+/* NESTED MENU */
+.sidebar-list-item .menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #ecf0f1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebar-list-item .menu-header:hover {
+  color: #19fe3f;
+  padding-left: 25px;
+}
+
+/* Submenu styles */
+.sidebar-list-item .submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideDown 1s ease-in-out;
+}
+
+
+.sidebar-list-item .submenu li {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-list-item .submenu a {
+  display: block;
+  padding: 12px 20px 12px 50px;
+  color: #b8c7ce;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-list-item .submenu a:hover {
+  color: #19b5fe;
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 55px;
+}
+
+/* Chevron icon for expandable menus */
+.sidebar-list-item .menu-header .menu-arrow {
+  margin-left: auto;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+/* Active menu item state */
+.sidebar-list-item.active {
+  background: rgba(25, 181, 254, 0.1);
+  border-left: 3px solid #19b5fe;
+}
+
+.sidebar-list-item.active a {
+  color: #19b5fe;
+  font-weight: 500;
+}
+
+/* Scrollbar styling */
+#sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+
+
+/* when sidebar is collapsed Partially hidden state - shows only icons */
+#sidebar.sidebar-responsive {
+  width: 60px; /* Only show icon column */
+  overflow: hidden;
+}
+
+/* Hide text and other elements when collapsed */
+#sidebar.sidebar-responsive .sidebar-title .sidebar-brand span,
+#sidebar.sidebar-responsive .sidebar-list-item a span {
+  display: none;
+}
+
+/* Adjust icon positioning when collapsed */
+#sidebar.sidebar-responsive .sidebar-list-item a {
+  justify-content: center;
+  padding: 15px 0;
+}
+
+/* Make icons larger when collapsed */
+#sidebar.sidebar-responsive .icon {
+  font-size: 1.5rem;
+  margin-right: 0;
+}
+#sidebar.sidebar-responsive .menu-header .icon{
+  transform: scale(1.5);
+  margin-right: 0;
+}
+/* nested menu parent menu name hide */
+#sidebar.sidebar-responsive .sidebar-list-item .menu-header span,
+#sidebar.sidebar-responsive .sidebar-list-item .submenu a
+{
+  display: none;
+}
+
+
+/* Animation for submenu */
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 300px;
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for max width =< 768*/
+@media (max-width: 768px) {
+  #sidebar {
+    left: -250px;
+    width: 250px;
+  }
+  
+  #sidebar.sidebar-responsive {
+    left: 0;
+    width: 250px;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
+  }
+  #sidebar.sidebar-responsive .sidebar-title .sidebar-brand span,
+  #sidebar.sidebar-responsive .sidebar-list-item a span {
+    display: block;
+  }
+  .close_icon {
+    display: block;
+    color: #c3c973;
+  }
+  
+  /* Show text on mobile even when "collapsed" */
+  #sidebar.sidebar-responsive .sidebar-title,
+  #sidebar.sidebar-responsive .sidebar-list-item a span {
+    display: flex;
+  }
+  
+  #sidebar.sidebar-responsive .sidebar-list-item a {
+    justify-content: flex-start;
+    padding: 15px 40px;
+  }
+  
+  #sidebar.sidebar-responsive .icon {
+    font-size: 1.1rem;
+  }
+  #sidebar.sidebar-responsive .sidebar-list-item .menu-header{
+    margin-left: 15px;
+  }
+  #sidebar.sidebar-responsive .sidebar-list-item .menu-header span{
+    display: block;
+  }
+  
+}

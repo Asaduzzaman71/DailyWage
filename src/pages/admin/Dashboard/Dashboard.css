@@ -1,0 +1,73 @@
+
+/* Cards Grid - Enhanced version */
+.main-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Changed to auto-fit */
+  gap: 20px;
+  width: 100%; /* Ensures grid takes full width */
+}
+/* Cards Grid */
+
+
+/* Individual Card */
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Card Inner Content */
+.card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.card-inner h3 {
+  color: #718096;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.card_icon {
+  font-size: 24px;
+}
+
+/* Card Values */
+.card h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+/* Specific Icon Colors */
+.BsFillArchiveFill { color: #4299e1; } /* Blue */
+.BsFillGrid3X3GapFill { color: #9f7aea; } /* Purple */
+.BsPeopleFill { color: #48bb78; } /* Green */
+.BsFillBellFill { color: #f56565; } /* Red */
+
+
+/* Desktops (1200px and up) */
+@media (max-width: 768px) {
+ .main-cards {
+    grid-template-columns: 1fr !important; ; /* Forces single column */
+    gap: 15px; /* Optional: Reduce gap for mobile */
+  }
+  .card {
+    width: 100%; /* Extra safety */
+    min-width: 100%; /* Prevents flex/grid quirks */
+  }
+  
+}
