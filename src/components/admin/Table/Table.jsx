@@ -1,54 +1,99 @@
-const  Table = () =>{
-  // Sample data
-  const workers = [
-    { id: 1, name: 'Rajesh Kumar', occupation: 'Plumber', experience: '5 years', rating: '4.8', location: 'Mumbai' },
-    { id: 2, name: 'Sunita Patel', occupation: 'Electrician', experience: '3 years', rating: '4.5', location: 'Delhi' },
-    { id: 3, name: 'Vijay Singh', occupation: 'Carpenter', experience: '7 years', rating: '4.9', location: 'Bangalore' },
-    { id: 4, name: 'Priya Sharma', occupation: 'Cleaner', experience: '2 years', rating: '4.2', location: 'Hyderabad' },
-  ];
+import PropTypes from 'prop-types';
 
+const Table = ({ 
+  headers, 
+  data, 
+  actionConfig,
+  className = '',
+  containerClassName = '',
+  headerClassName = 'bg-gray-50',
+  rowClassName = 'hover:bg-gray-50',
+  cellClassName = 'px-6 py-4 whitespace-nowrap',
+  textClassName = 'text-sm',
+  actionCellClassName = 'text-right'
+}) => {
   return (
-    <div className="overflow-x-auto p-4">
-      <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-md">
-        <thead className="bg-gray-800 text-white">
-          <tr>
-            <th className="py-3 px-4 text-left">ID</th>
-            <th className="py-3 px-4 text-left">Name</th>
-            <th className="py-3 px-4 text-left">Occupation</th>
-            <th className="py-3 px-4 text-left">Experience</th>
-            <th className="py-3 px-4 text-left">Rating</th>
-            <th className="py-3 px-4 text-left">Location</th>
-            <th className="py-3 px-4 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-700">
-          {workers.map((worker) => (
-            <tr key={worker.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-              <td className="py-3 px-4">{worker.id}</td>
-              <td className="py-3 px-4 font-medium">{worker.name}</td>
-              <td className="py-3 px-4">
-                <span className="bg-blue-100 text-blue-800 py-1 px-2 rounded-full text-xs">
-                  {worker.occupation}
-                </span>
-              </td>
-              <td className="py-3 px-4">{worker.experience}</td>
-              <td className="py-3 px-4">
-                <div className="flex items-center">
-                  <span className="text-yellow-500 mr-1">★</span>
-                  {worker.rating}
-                </div>
-              </td>
-              <td className="py-3 px-4">{worker.location}</td>
-              <td className="py-3 px-4">
-                <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-sm transition-colors">
-                  Hire
-                </button>
-              </td>
+    <div className={`border border-gray-200 rounded-lg shadow-sm overflow-hidden my-3 ${containerClassName}`}>
+      <div className="overflow-x-auto">
+        <table className={`min-w-full border-collapse ${className}`}>
+          <thead>
+            <tr className={headerClassName}>
+              {headers.map((header, index) => (
+                <th 
+                  key={index}
+                  scope="col"
+                  className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${header.className || ''}`}
+                >
+                  {header.label}
+                </th>
+              ))}
+              {actionConfig && (
+                <th scope="col" className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${actionCellClassName}`}>
+                  Action
+                </th>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((row, rowIndex) => (
+              <tr key={rowIndex} className={rowClassName}>
+                {headers.map((header, headerIndex) => (
+                  <td 
+                    key={headerIndex}
+                    className={`${cellClassName} ${textClassName} ${header.cellClassName || ''}`}
+                  >
+                    {row[header.key]}
+                  </td>
+                ))}
+                {actionConfig && (
+                  <td className={`${cellClassName} ${textClassName} font-medium ${actionCellClassName}`}>
+                    {actionConfig.actions.map((action, actionIndex) => (
+                      <button
+                        key={actionIndex}
+                        type="button"
+                        onClick={() => action.onClick(row)}
+                        className={`${action.className || 'text-blue-600 hover:text-blue-900 font-medium'} mr-3 last:mr-0`}
+                      >
+                        {action.label}
+                      </button>
+                    ))}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
+
+Table.propTypes = {
+  headers: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      className: PropTypes.string,
+      cellClassName: PropTypes.string
+    })
+  ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionConfig: PropTypes.shape({
+    actions: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        onClick: PropTypes.func.isRequired,
+        className: PropTypes.string
+      })
+    )
+  }),
+  className: PropTypes.string,
+  containerClassName: PropTypes.string,
+  headerClassName: PropTypes.string,
+  rowClassName: PropTypes.string,
+  cellClassName: PropTypes.string,
+  textClassName: PropTypes.string,
+  actionCellClassName: PropTypes.string
+};
+
 export default Table;
