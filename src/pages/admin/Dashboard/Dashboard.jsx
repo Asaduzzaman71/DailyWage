@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill} from 'react-icons/bs'
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import Breadcrumb from '../../../components/admin/Breadcrumb/Breadcrumb.jsx'
@@ -7,6 +7,8 @@ import Table from '../../../components/admin/Table/Table.jsx'
 import Modal from '../../../components/admin/Modal/Modal.jsx'
 import FormInput from '../../../components/el/FormInput.jsx';
 import SelectInput from '../../../components/el/SelectInput.jsx';
+import FileUpload from '../../../components/el/FileUpload.jsx';
+import TextArea from '../../../components/el/TextArea.jsx';
 const Dashboard = () =>{
 
     const data = [
@@ -97,13 +99,14 @@ const Dashboard = () =>{
   const [payload, setPayload] = useState({
     username: '',  // Use empty string instead of null
     age: '',
-    categories: []       // Use empty string (or 0 if you prefer),
+    categories: [],
+    description: '' ,      // Use empty string (or 0 if you prefer),
+    documents: [] // Use null for file uploads
 
   });
 
   // Update handler that preserves other fields
   const handleInputChange = (e) => {
-    console.log('Input changed:', e.target.name, e.target.value);
     const { name, value } = e.target;
     setPayload(prev => ({
       ...prev,
@@ -121,7 +124,15 @@ const Dashboard = () =>{
         categories: selectedValues
       }));
   };
-  const renderModalContent = () => {
+  // const handleTextAreaChange = (e) => {
+  //   const { name, value } = e.target; // Get the value from the textarea
+  //   setPayload(prev => ({       
+  //     ...prev,
+  //     description: value // Update the description field  
+  //   }));
+  //   console.log('Updated payload:', payload);
+  // };
+  const renderModalContent = useMemo(() => {
     if (modalType === 'edit' || modalType === 'create') {
       return (
         <form className="p-4 md:p-5">
@@ -152,7 +163,7 @@ const Dashboard = () =>{
                     name="categories"
                     id="categories"
                     value={payload.categories}
-                    onChange={handleCategoryChange}
+                    onChange={handleInputChange}
                     options={categories}
                     valueKey='id'
                     labelKey='label'
@@ -161,8 +172,23 @@ const Dashboard = () =>{
                   />
               </div>
               <div className="col-span-2">
-                  <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Description</label>
-                  <textarea id="description" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write product description here"></textarea>                    
+                  <TextArea
+                    id="description"
+                    label="Product Description"
+                    name="description"
+                    value={payload.description}
+                    onChange={handleInputChange}
+                  />
+              </div>
+              <div className="col-span-2">
+                  <FileUpload
+                    name="documents"
+                    label="Upload Documents"
+                    multiple
+                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.PNG,.JPG,.JPEG"
+                    maxSize={10}
+                    onChange={handleInputChange}
+                  />
               </div>
           </div>
         </form>
@@ -193,7 +219,7 @@ const Dashboard = () =>{
       );
     }
     return null;
-  };
+  }, [modalType, payload, currentRow]);
   const openCreateModal = () => {
     setCurrentRow();
     setModalType('add');
@@ -254,8 +280,8 @@ const Dashboard = () =>{
           headerClassName="bg-blue-50"
         />
 
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title='Edit' onSubmit={() => console.log('Submitted')} showFooter={modalType == 'delete' ? false : true} size='xl'>
-          {renderModalContent()}
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title='Edit' onSubmit={() => console.log('Submitted')} showFooter={modalType == 'delete' ? false : true} size='4xl'>
+          {renderModalContent}
         </Modal>
        </>
      

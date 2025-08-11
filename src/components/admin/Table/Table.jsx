@@ -52,7 +52,7 @@ const Table = ({
                         key={actionIndex}
                         type="button"
                         onClick={() => action.onClick(row)}
-                        className={`${action.className || 'text-blue-600 hover:text-blue-900 font-medium'} mr-3 last:mr-0`}
+                        className={`${action.className || 'text-blue-600 hover:text-blue-900 font-medium'} mr-3 last:mr-0 cursor-pointer`}
                       >
                         {action.label}
                       </button>
