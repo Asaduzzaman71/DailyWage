@@ -1,27 +1,26 @@
-import { useState } from 'react'
-import './App.css'
-import Header from './components/admin/Header/Header.jsx'
-import SideBar from './components/admin/SideBar/SideBar.jsx'
+import { Routes, Route } from 'react-router-dom'
+import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import Dashboard from './pages/admin/Dashboard/Dashboard'
-import { Route, Routes } from 'react-router-dom'
-import { ToastContainer, Bounce  } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Login from './pages/Login/Login'
+import Registration from './pages/Registration/Registration'
+import { ToastContainer, Bounce } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 function App() {
-  const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
-
-  const OpenSidebar = () => {
-    setOpenSidebarToggle(!openSidebarToggle)
-  }
-
   return (
-    <div className={`app-container ${openSidebarToggle ? 'sidebar-collapsed' : ''}`}>
-      <Header OpenSidebar={OpenSidebar}/>
-      <SideBar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
-          <main className='main-container'> 
-              <Routes> 
-                  <Route path='/dashboard' element={ <Dashboard />}/>
-              </Routes>
-          </main>
+    <>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Registration />} />
+
+        {/* Admin routes with layout */}
+        <Route element={<AdminLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Add other admin routes here */}
+        </Route>
+      </Routes>
+
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -35,7 +34,7 @@ function App() {
         theme="colored"
         transition={Bounce}
       />
-    </div>
+    </>
   )
 }
 
