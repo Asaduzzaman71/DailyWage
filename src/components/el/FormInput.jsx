@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const FormInput = ({
+  resetField = 0,
   label,
   type = 'text',
   name,
@@ -36,8 +37,8 @@ const FormInput = ({
           }
           break;
         case 'password':
-          if (value.length < 6) {
-            return 'Password must be at least 6 characters';
+          if (value.length < 8) {
+            return 'Password must be at least 8 characters';
           }
           break;
         case 'tel':
@@ -67,10 +68,11 @@ const FormInput = ({
 
   // Handle validation when value changes
   useEffect(() => {
-    if (validateOnChange && isTouched) {
+    if (validateOnChange && isTouched && !resetField) {
       setInternalError(validate(value));
     }
   }, [value, validateOnChange, isTouched]);
+
 
   const handleChange = (e) => {
     onChange(e); // Call parent onChange

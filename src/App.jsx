@@ -15,15 +15,18 @@ function App() {
         <Route path="/signup" element={<Registration />} />
 
         {/* Admin routes with layout */}
-        <Route element={<AdminLayout />}>
+        <Route path="/" element={<AdminLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           {/* Add other admin routes here */}
         </Route>
+        
+        {/* Redirect or 404 route */}
+        <Route path="*" element={<div>Page not found</div>} />
       </Routes>
 
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

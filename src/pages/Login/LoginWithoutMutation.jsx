@@ -1,53 +1,18 @@
-// src/pages/Login.jsx
+// src/PAGES/Login.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
-import { authService } from "../../services";
-import { useMutation } from '@tanstack/react-query';
 import FormInput from '../../components/el/FormInput.jsx';
-import { formatValidationErrors } from '../../utils/errorFormatter.js'
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-export default function Login() {
-   const navigate = useNavigate();
+import { Link } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStoreWithoutMutation.js';
+
+export default function Example() {
+  const login = useAuthStore(state => state.login);
+  const isLoading = useAuthStore(state => state.isLoading);
+  const error = useAuthStore(state => state.error);
+  const validationErrors = useAuthStore(state => state.validationErrors);
+
   const [payload, setPayload] = useState({
     email: '',  
     password: '',
-  });
-
-  // Get Zustand state and actions
-  const {
-    error,
-    validationErrors,
-    setUser,
-    setError,
-    setValidationErrors,
-    clearAuth
-  } = useAuthStore();
-
-  // Login mutation with TanStack Query's isLoading
-  const loginMutation = useMutation({
-    mutationFn: authService.login,
-    onMutate: () => {
-      setError(null);
-      setValidationErrors(null);
-    },
-    onSuccess: (response) => {
-      console.log(response)
-      setUser(response.data.user);
-      toast.success(response.data.message);
-      navigate('/dashboard')
-    },
-    onError: (error) => {
-      
-      // Handle different error types
-      if (error.response?.status === 400) {
-          const formatted = formatValidationErrors(error.response.data.errors);
-          setValidationErrors(formatted);
-      } else {
-        setError(error.response?.data?.message || "Login failed");
-      }
-    }
   });
 
   const handleInputChange = (e) => {
@@ -58,9 +23,15 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    loginMutation.mutate(payload);
+    try {
+      console.log('Submitting payload:', payload);
+      await login(payload);
+      // Redirect on success
+    } catch (err) {
+      // Error is already handled in the store
+    }
   };
 
   return (
@@ -78,7 +49,7 @@ export default function Login() {
           </h2>
         </div>
 
-        {/* Error Message */}
+        {/* Error Message (for 401 Unauthorized) */}
         {error && (
           <div className="rounded-md bg-red-50 p-4">
             <p className="text-sm text-red-700">{error}</p>
@@ -96,6 +67,7 @@ export default function Login() {
               onChange={handleInputChange}
               required
               validateOnBlur={true}
+              // error prop can still be used for backend errors
               error={validationErrors?.email?.[0]}
             />
 
@@ -107,7 +79,7 @@ export default function Login() {
               onChange={handleInputChange}
               required
               validateOnBlur={true}
-              error={validationErrors?.password?.[0]}
+              error={validationErrors?.password?.[0]} // Show validation error
             />
           </div>
 
@@ -133,13 +105,13 @@ export default function Login() {
 
           <button
             type="button"
-            disabled={loginMutation.isLoading}
+            disabled={isLoading}
             onClick={handleSubmit}
             className={`w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-              loginMutation.isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            {loginMutation.isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
