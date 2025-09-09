@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 const Modal = ({ 
   isOpen, 
   onClose, 
@@ -93,4 +94,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default memo(Modal);

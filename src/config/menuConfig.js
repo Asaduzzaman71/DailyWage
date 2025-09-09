@@ -10,42 +10,47 @@ export const menuItems = [
     path: "/dashboard"
   },
   {
-    title: "Products",
-    icon: BsFillArchiveFill,
-    submenu: [
-      {
-        title: "All Products",
-        path: "/products"
-      },
-      {
-        title: "Add New",
-        path: "/products/new"
-      },
-      {
-        title: "Categories",
-        path: "/products/categories"
-      }
-    ]
+    title: "Users",
+    icon: BsPeopleFill,
+    path: "/users"
   },
+  // {
+  //   title: "Products",
+  //   icon: BsFillArchiveFill,
+  //   submenu: [
+  //     {
+  //       title: "All Products",
+  //       path: "/products"
+  //     },
+  //     {
+  //       title: "Add New",
+  //       path: "/products/new"
+  //     },
+  //     {
+  //       title: "Categories",
+  //       path: "/products/categories"
+  //     }
+  //   ]
+  // },
   {
     title: "Categories",
     icon: BsFillGrid3X3GapFill,
     path: "/categories"
   },
-  {
-    title: "Customers",
-    icon: BsPeopleFill,
-    submenu: [
-      {
-        title: "All Customers",
-        path: "/customers"
-      },
-      {
-        title: "Add New",
-        path: "/customers/new"
-      }
-    ]
-  },
+  // {
+  //   title: "Customers",
+  //   icon: BsPeopleFill,
+  //   submenu: [
+  //     {
+  //       title: "All Customers",
+  //       path: "/customers"
+  //     },
+  //     {
+  //       title: "Add New",
+  //       path: "/customers/new"
+  //     }
+  //   ]
+  // },
   {
     title: "Inventory",
     icon: BsListCheck,

@@ -9,7 +9,7 @@ import { formatValidationErrors } from '../../utils/errorFormatter.js'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 export default function Login() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [payload, setPayload] = useState({
     email: '',  
     password: '',
@@ -29,17 +29,20 @@ export default function Login() {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onMutate: () => {
+       console.log('Login mutation started');
       setError(null);
       setValidationErrors(null);
     },
     onSuccess: (response) => {
-      console.log(response)
+      console.log('Login success:', response);
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       setUser(response.data.user);
       toast.success(response.data.message);
       navigate('/dashboard')
     },
     onError: (error) => {
-      
+       console.log('Login error:', error);
       // Handle different error types
       if (error.response?.status === 400) {
           const formatted = formatValidationErrors(error.response.data.errors);

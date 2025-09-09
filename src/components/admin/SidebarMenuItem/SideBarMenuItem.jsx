@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link   } from 'react-router-dom'
 import { BsChevronRight, BsChevronDown } from 'react-icons/bs';
 import './SideBarMenuItem.css';
 
@@ -39,16 +40,16 @@ const SideBarMenuItem = ({ menu, index }) => {
                     >
                         {menu.submenu.map((subItem, subIndex) => (
                             <li key={`${subItem.title}-${subIndex}`}>
-                                <a href={subItem.path}>{subItem.title}</a>
+                                <Link  to={subItem.path}>{subItem.title}</Link>
                             </li>
                         ))}
                     </ul>
                 </>
             ) : (
-                <a href={menu.path}>
+                <Link  to={menu.path}>
                     <IconComponent className='icon' />
                     <span>{menu.title}</span>
-                </a>
+                </Link>
             )}
         </li>
     );
