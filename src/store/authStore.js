@@ -3,9 +3,11 @@ import { create } from "zustand";
 import { jwtDecode } from 'jwt-decode';
 export const useAuthStore = create((set) => ({
     user: null,
+    token: null,
     isAuthenticated: false,
     error: null,
     validationErrors: null,
+    loading: true,
     // Initialize auth state from localStorage
     initialize: () => {
       const token = localStorage.getItem('access_token');
@@ -14,7 +16,7 @@ export const useAuthStore = create((set) => ({
       if (token && userData) {
         try {
           const user = JSON.parse(userData);
-          set({ user, isAuthenticated: true, loading: false });
+          set({ user, token, isAuthenticated: true, loading: false });
         } catch (error) {
           set({ loading: false });
         }
@@ -27,6 +29,9 @@ export const useAuthStore = create((set) => ({
       user, 
       isAuthenticated: !!user, 
       loading: false 
+    }),
+    setAccessToken: (token) =>set({ 
+      token
     }),
     setError: (error) => set({ error }),
     setValidationErrors: (errors) => set({ validationErrors: errors }),

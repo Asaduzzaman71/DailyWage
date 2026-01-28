@@ -6,14 +6,17 @@ import Breadcrumb from '../../../components/admin/Breadcrumb/Breadcrumb.jsx';
 import Table from '../../../components/admin/Table/Table.jsx';
 import Modal from '../../../components/admin/Modal/Modal.jsx';
 import FormInput from '../../../components/el/FormInput.jsx';
-
+import Pagination from '../../../components/pagination/Pagination.jsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { userService } from "../../../services";
 const Users = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(1);
   
   // Get Zustand state and actions
   const { userList, error, validationErrors, setError, setValidationErrors } = useUserStore();
-  const { data, isLoading, isError } = useUsers({ page, search });
+  const { data, isLoading, isError } = useUsers({ page, limit, search });
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
@@ -47,13 +50,18 @@ const Users = () => {
         label: <FiTrash2 className='inline' />,
         onClick: (row) => openDeleteModal(row),
         className: 'text-red-600 hover:text-red-900'
-      }
+      },
+      
     ]
   }), []);
 
   // Memoized data
   const tableData = useMemo(() => data?.data?.users || [], [data]);
+  const paginationData = useMemo(() => data?.data?.pagination || 1, [data]);
 
+  const onPageChange = useCallback((newPage) => {
+    setPage(newPage);
+  }, []); 
   // Callbacks with useCallback
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -90,11 +98,28 @@ const Users = () => {
   const handleClose = () => {
     setIsModalOpen(false);
   }
-
+   const queryClient = useQueryClient();
+  // Create the mutation
+  const { mutate: updateUserMutation, isPending: isUpdating, isError: isUpdateError, error: updateError } = useMutation({
+    mutationFn: userService.updateUser,
+    onSuccess: () => {
+      // Invalidate the 'users' query to refetch the list
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      handleClose(); // Close modal on success
+    },
+    onError: (error) => {
+      setError(error.message || 'Failed to update user');
+    }
+  });
   const handleSubmit = () => {
-    console.log('Form submitted with:', payload);
-    // Your form submission logic here
-    setIsModalOpen(false);
+    if (modalType === 'edit' && currentRow) {
+      // Trigger the mutation for an update
+       updateUserMutation({ id: currentRow.id, ...payload });
+    } else {
+      // Handle delete or add logic here
+      console.log('Form submitted with:', payload);
+      handleClose();
+    }
   };
 
   // Memoized modal content
@@ -171,6 +196,7 @@ const Users = () => {
         headerClassName="bg-blue-50"
         isLoading={isLoading}
       />
+      <Pagination totalPages={paginationData.totalPages} currentPage={paginationData.currentPage} onPageChange={onPageChange} />
 
       <Modal 
         isOpen={isModalOpen}  

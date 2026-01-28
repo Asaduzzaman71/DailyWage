@@ -1,6 +1,7 @@
 export const formatValidationErrors = (backendErrors) => {
   const formattedErrors = {};
   backendErrors.forEach(error => {
+    console.log('errror', error);
     if (!formattedErrors[error.param]) {
       formattedErrors[error.param] = [];
     }

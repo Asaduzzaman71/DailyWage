@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { userService } from "../services";
 
 const fetchUsers = async (params) => {
-  const { data } = await userService.getUserList(params);
-  console.log('data', data)
+  console.log("fetching users with params:", params )
+  const { data } = await userService.getUserList({params});
   return data;
 };
 

@@ -20,6 +20,7 @@ export default function Login() {
     error,
     validationErrors,
     setUser,
+    setAccessToken,
     setError,
     setValidationErrors,
     clearAuth
@@ -37,6 +38,7 @@ export default function Login() {
       console.log('Login success:', response);
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
+      setAccessToken(response.data.access_token);
       setUser(response.data.user);
       toast.success(response.data.message);
       navigate('/dashboard')
