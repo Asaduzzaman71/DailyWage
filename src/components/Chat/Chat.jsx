@@ -8,6 +8,7 @@ const Chat = ({ auth }) => {
     onlineUsers,
     messages,
     privateMessages,
+    conversationIdByUser,
     typingUsers,
     notifications,
     connect,
@@ -17,12 +18,14 @@ const Chat = ({ auth }) => {
     startTyping,
     stopTyping,
     clearNotifications,
+    ensureConversation,
     isUserOnline
   } = useSocketStore();
 
   const [message, setMessage] = useState('');
   const [activeChat, setActiveChat] = useState('group');
   const messagesEndRef = useRef(null);
+  const currentUserId = auth?.user?.id;
 
   // Connect to socket when component mounts
   useEffect(() => {
@@ -44,22 +47,41 @@ const Chat = ({ auth }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, privateMessages, activeChat]);
 
+  useEffect(() => {
+    stopTyping();
+    setMessage('');
+  }, [activeChat, stopTyping]);
+
+  const handleSelectChat = (chatId) => {
+    console.log('[Chat] select chat:', chatId, 'activeChat:', activeChat);
+    if (chatId !== 'group') {
+      console.log('[Chat] ensureConversation emit for:', chatId);
+      ensureConversation(chatId);
+    }
+    setActiveChat(chatId);
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
       if (activeChat === 'group') {
         sendGroupMessage(message);
       } else {
-        sendPrivateMessage(activeChat, message);
+        const conversationId = conversationIdByUser[activeChat] || null;
+        sendPrivateMessage(activeChat, message, conversationId);
       }
       setMessage('');
       stopTyping();
     }
   };
 
-  const handleTyping = () => {
-    if (message.trim()) {
-      const options = activeChat === 'group' ? {} : { receiverId: activeChat };
+  const handleTyping = (value) => {
+    const trimmedValue = (value ?? '').trim();
+    if (trimmedValue) {
+      const conversationId = conversationIdByUser[activeChat];
+      const options = activeChat === 'group'
+        ? {}
+        : { receiverId: activeChat, conversationId };
       startTyping(options);
     } else {
       stopTyping();
@@ -71,14 +93,16 @@ const Chat = ({ auth }) => {
     if (activeChat === 'group') {
       return messages;
     }
-    return privateMessages[activeChat] || [];
+    const conversationId = conversationIdByUser[activeChat] || activeChat;
+    return privateMessages[conversationId] || [];
   };
 
   const getTypingUsersForCurrentChat = () => {
     if (activeChat === 'group') {
       return typingUsers.filter(typingUser => !typingUser.conversationId || typingUser.conversationId === 'group');
     }
-    return typingUsers.filter(typingUser => typingUser.conversationId === activeChat || typingUser.userId === activeChat);
+    const conversationId = conversationIdByUser[activeChat] || activeChat;
+    return typingUsers.filter(typingUser => typingUser.conversationId === conversationId || typingUser.userId === activeChat);
   };
 
   // Get typing usernames as a string
@@ -118,7 +142,7 @@ const Chat = ({ auth }) => {
                   ? 'bg-blue-500 text-white shadow-md'
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
               }`}
-              onClick={() => setActiveChat('group')}
+              onClick={() => handleSelectChat('group')}
             >
               <span className="font-medium">Group Chat {activeChat}</span>
             </div>
@@ -130,7 +154,7 @@ const Chat = ({ auth }) => {
                     ? 'bg-blue-500 text-white shadow-md'
                     : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                 }`}
-                onClick={() => setActiveChat(onlineUser.id)}
+                onClick={() => handleSelectChat(onlineUser.id)}
               >
                 <span className="font-medium truncate">{onlineUser.username}</span>
                 <div className="w-2 h-2 bg-green-500 rounded-full ml-2 flex-shrink-0"></div>
@@ -149,17 +173,17 @@ const Chat = ({ auth }) => {
                 className={`max-w-xs lg:max-w-md xl:max-w-lg rounded-2xl p-3 ${
                   msg.type === 'system'
                     ? 'bg-yellow-100 border border-yellow-200 text-yellow-800 mx-auto text-center italic'
-                    : msg.senderId === user.id
+                    : msg.senderId === currentUserId
                     ? 'bg-blue-500 text-white ml-auto'
                     : 'bg-gray-100 text-gray-800'
                 } ${msg.type !== 'system' ? 'rounded-bl-none' : ''}`}
               >
                 {msg.type !== 'system' && msg.type !== 'private' && (
                   <div className="flex justify-between items-center mb-1">
-                    <strong className={`text-sm ${msg.senderId === user.id ? 'text-blue-100' : 'text-gray-600'}`}>
+                    <strong className={`text-sm ${msg.senderId === currentUserId ? 'text-blue-100' : 'text-gray-600'}`}>
                       {msg.username}
                     </strong>
-                    <span className={`text-xs ${msg.senderId === user.id ? 'text-blue-200' : 'text-gray-500'}`}>
+                    <span className={`text-xs ${msg.senderId === currentUserId ? 'text-blue-200' : 'text-gray-500'}`}>
                       {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -167,7 +191,7 @@ const Chat = ({ auth }) => {
                 <div className="break-words">{msg.message}</div>
                 {msg.status && (
                   <div className={`text-xs mt-1 text-right ${
-                    msg.senderId === user.id ? 'text-blue-200' : 'text-gray-500'
+                    msg.senderId === currentUserId ? 'text-blue-200' : 'text-gray-500'
                   }`}>
                     {msg.status}
                   </div>
@@ -193,8 +217,9 @@ const Chat = ({ auth }) => {
                 type="text"
                 value={message}
                 onChange={(e) => {
-                  setMessage(e.target.value);
-                  handleTyping();
+                  const nextValue = e.target.value;
+                  setMessage(nextValue);
+                  handleTyping(nextValue);
                 }}
                 placeholder={`Message ${activeChat === 'group' ? 'group' : 'user'}...`}
                 disabled={!isConnected}
